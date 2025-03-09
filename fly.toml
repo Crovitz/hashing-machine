@@ -1,0 +1,26 @@
+# fly.toml app configuration file generated for hashing-machine on 2025-03-07T23:46:00+01:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = 'hashing-machine'
+primary_region = 'waw'
+
+[build]
+builder = 'paketobuildpacks/builder-jammy-tiny:latest'
+
+[build.args]
+BP_JVM_VERSION = '21'
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = 'stop'
+  auto_start_machines = true
+  min_machines_running = 1
+  processes = ['app']
+
+[[vm]]
+  memory = '1gb'
+  cpu_kind = 'shared'
+  cpus = 1
