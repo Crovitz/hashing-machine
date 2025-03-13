@@ -21,7 +21,7 @@ class ConsistentHashing {
             throw new IllegalArgumentException("Instance list cannot be empty");
         }
         this.ring = instanceIds.stream()
-                .flatMap(instance -> range(0, 100)
+                .flatMap(instance -> range(0, 1000)
                         .mapToObj(i -> entry(hash(instance + "#" + i), instance)))
                 .collect(toMap(
                         Map.Entry::getKey,
@@ -37,6 +37,8 @@ class ConsistentHashing {
     }
 
     private int hash(String key) {
-        return MurmurHash3.hash32x86(key.getBytes(StandardCharsets.UTF_8)) & 0x7fffffff;
+        int hash1 = MurmurHash3.hash32x86(key.getBytes(StandardCharsets.UTF_8));
+        int hash2 = Integer.rotateLeft(hash1, 13);
+        return (hash1 ^ hash2) & 0x7fffffff;
     }
 }
